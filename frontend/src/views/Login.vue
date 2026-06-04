@@ -1,6 +1,9 @@
 <script setup>
 import Nav from "@/components/Nav.vue";
 import SubmitButton from "@/components/SubmitButton.vue";
+import { useRoute } from "vue-router";
+
+const route = useRoute();
 </script>
 
 <template>

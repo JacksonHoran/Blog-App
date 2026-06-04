@@ -53,24 +53,29 @@ class ArticlesController extends AppController
  // in src/Controller/ArticlesController.php
     public function add()
     {
+        $this->request->allowMethod(['POST']);
         $article = $this->Articles->newEmptyEntity();
-        $this->Authorization->authorize($article);
+        $article = $this->Articles->patchEntity($article, $this->request->getData());
+        $user = $this->request->getAttribute('identity');
+        $article->user_id = $user->$user->getIdentifier();
 
-        if ($this->request->is('post')) {
-            $article = $this->Articles->patchEntity($article, $this->request->getData());
-
-            // Changed: Set the user_id from the current user.
-            $article->user_id = $this->request->getAttribute('identity')->getIdentifier();
-            $article->published = true;
-
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('Unable to add your article.'));
+        if ($this->Articles->save($article)) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(201)
+                ->withStringbody(json_encode([
+                    'message' => 'Article successfull;y created.',
+                    'article' => $article
+                ]));
         }
-        $this->set(compact('article'));
+
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(422)
+            ->withStringBody(json_encode([
+                'message' => 'Failed to save article. Please check your inputs.',
+                'errors' => $article->getErrors()
+            ]));
     }
 
     /**

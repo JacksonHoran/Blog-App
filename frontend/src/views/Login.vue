@@ -1,10 +1,10 @@
 <script setup>
-import Nav from '@/components/Nav.vue';
-
+import Nav from "@/components/Nav.vue";
+import SubmitButton from "@/components/SubmitButton.vue";
 </script>
 
 <template>
-    <Nav />
+  <Nav />
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
     <div class="p-5">
       <h2 class="text-3xl font-light">Login</h2>
@@ -25,13 +25,11 @@ import Nav from '@/components/Nav.vue';
           </div>
         </fieldset>
         <div class="flex gap-4">
-          <button
-            class="mt-3 py-1 px-3 bg-blue-300 rounded-xl hover:bg-blue-400 shadow-xl cursor-pointer">
-            Submit
-          </button>
+          <SubmitButton />
           <a
             class="mt-3 py-1 px-3 bg-blue-300 rounded-xl hover:bg-blue-400 shadow-xl cursor-pointer"
-            >Add User</a>
+            >Add User</a
+          >
         </div>
       </form>
       <p v-if="errorMessage">{{ errorMessage }}</p>

@@ -64,7 +64,7 @@ class ArticlesController extends AppController
                 ->withType('application/json')
                 ->withStatus(201)
                 ->withStringbody(json_encode([
-                    'message' => 'Article successfull;y created.',
+                    'message' => 'Article successfully created.',
                     'article' => $article
                 ]));
         }

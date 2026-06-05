@@ -43,18 +43,27 @@ class UsersController extends AppController
      */
     public function add()
     {
+        $this->request->allowMethod(['POST']);
         $this->Authorization->skipAuthorization();
         $user = $this->Users->newEmptyEntity();
-        if ($this->request->is('post')) {
-            $user = $this->Users->patchEntity($user, $this->request->getData());
-            if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        $user = $this->Users->patchEntity($user, $this->request->getData());
+        if ($this->Users->save($user)) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(201)
+                ->withStringBody(json_encode([
+                    'message' => 'New user successfully created.',
+                    'user' => $user
+                ]));
         }
-        $this->set(compact('user'));
+
+        return $this-> response
+            ->withType('application/json')
+            ->withStatus(422)
+            ->withStringBody(json_encode([
+                'message' => 'Failed to save user. Please check your inputs.',
+                'errors' => $user->getErrors()
+            ]));
     }
 
     /**
@@ -109,25 +118,39 @@ class UsersController extends AppController
 
     public function login()
     {
-        $result = $this->Authentication->getResult();
+        $this->request->allowMethod(['POST']);
         $this->Authorization->skipAuthorization();
-        // If the user is logged in send them away.
+        $result = $this->Authentication->getResult();
+
         if ($result && $result->isValid()) {
-            $target = $this->Authentication->getLoginRedirect() ?? [
-                'controller' => 'Articles',
-                'action' => 'index',
-            ];
-            return $this->redirect($target);
+            $user = $result->getData();
+
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(200)
+                ->withStringBody(json_encode([
+                    'message' => 'Login successful',
+                    'user' => $user
+                ]));
         }
-        if ($this->request->is('post')) {
-            $this->Flash->error(__('Invalid username or password'));
-        }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(401)
+            ->withStringBody(json_encode([
+                'message' => 'Invalid email or password'
+            ]));
     }
 
     public function logout()
     {
         $this->Authentication->logout();
         $this->Authorization->skipAuthorization();
-        return $this->redirect(['controller' => 'Users', 'action' => 'login']);
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(200)
+            ->withStringBody(json_encode([
+                'message' => 'Logout successful'
+            ]));
     }
 }

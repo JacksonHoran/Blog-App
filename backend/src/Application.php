@@ -167,10 +167,8 @@ class Application extends BaseApplication
         $service->loadAuthenticator('Authentication.Form', [
             'fields' => $fields,
             'loginUrl' => [
-                'prefix' => false,
-                'plugin' => null,
-                'controller' => 'Users',
-                'action' => 'login',
+                'backend/users/login.json',
+                'backend/users/login'
             ],
             'identifier' => [
                 'className' => 'Authentication.Password',

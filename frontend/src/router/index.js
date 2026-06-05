@@ -1,6 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
 import ArticleForm from "@/components/ArticleForm.vue";
 import Articles from "@/views/Articles.vue";
+import Add from "@/views/Add.vue";
+import Edit from "@/views/Edit.vue";
 import Login from "@/views/Login.vue";
 import AddUser from "@/views/AddUser.vue";
 
@@ -36,12 +38,12 @@ const router = createRouter({
     {
       path: "/articles/add",
       name: "add-article",
-      component: ArticleForm,
+      component: Add,
     },
     {
       path: "/articles/edit/:id",
       name: "edit-article",
-      component: ArticleForm,
+      component: Edit,
     },
     {
         path: '/articles/delete/:id',

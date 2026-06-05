@@ -1,4 +1,18 @@
-<script setup></script>
+<script setup>
+import { useRouter } from 'vue-router';
+import api from '@/services/api';
+
+const router = useRouter();
+
+const handleLogout = async () => {
+  try {
+    await api.post('/users/logout.json');
+    router.push('/login');
+  } catch (error) {
+    console.error('Logout failed:', error);
+  }
+}
+</script>
 
 <template>
   <nav class="flex max-w-200 mx-auto mb-5 px-1 py-4 items-center justify-between">
@@ -8,7 +22,7 @@
     </div>
     <div>
       <router-link to="/articles" class="px-2 text-xl cursor-pointer">Articles</router-link>
-      <router-link to="/logout" class="px-2 text-xl cursor-pointer">Log Out</router-link>
+      <button @click="handleLogout" class="px-2 text-xl cursor-pointer">Logout</button>
     </div>
   </nav>
 </template>

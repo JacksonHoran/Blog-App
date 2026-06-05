@@ -144,6 +144,7 @@ class UsersController extends AppController
 
     public function logout()
     {
+        $this->request->allowMethod(['POST']);
         $this->Authentication->logout();
         $this->Authorization->skipAuthorization();
         return $this->response

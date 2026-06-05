@@ -3,54 +3,37 @@ declare(strict_types=1);
 
 namespace App\Controller;
 
-/**
- * Articles Controller
- *
- * @property \App\Model\Table\ArticlesTable $Articles
- */
+use Cake\Http\Response;
+
 class ArticlesController extends AppController
 {
-    /**
-     * Index method
-     *
-     * @return \Cake\Http\Response|null|void Renders view
-     */
     public function index()
     {
+        $this->request->allowMethod(['GET']);
         $this->Authorization->skipAuthorization();
-
-        $query = $this->Articles->find()
-            ->contain(['Users']);
-        $articles = $this->paginate($query);
-
-        $this->set(compact('articles'));
+        $articles = $this->paginate($this->Articles);
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(200)
+            ->withStringBody(json_encode([
+                'articles' => $articles
+            ]));
     }
 
-    /**
-     * View method
-     *
-     * @param string|null $slug Article slug.
-     * @return \Cake\Http\Response|null|void Renders view
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function view($slug = null)
+    public function view($id = null)
     {
+        $this->request->allowMethoid(['GET']);
         $this->Authorization->skipAuthorization();
-
-        // Update retrieving tags with contain()
-        $article = $this->Articles
-            ->findBySlug($slug)
-            ->firstOrFail();
-        $this->set(compact('article'));
+        $article = $this->Articles->get($id);
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(200)
+            ->withStringBody(json_encode([
+                'message' => 'Article successfully retrieved.',
+                'article' => $article
+            ]));
     }
 
-
-    /**
-     * Add method
-     *
-     * @return \Cake\Http\Response|null|void Redirects on successful add, renders view otherwise.
-     */
- // in src/Controller/ArticlesController.php
     public function add()
     {
         $this->request->allowMethod(['POST']);
@@ -78,52 +61,51 @@ class ArticlesController extends AppController
             ]));
     }
 
-    /**
-     * Edit method
-     *
-     * @param string|null $slug Article slug.
-     * @return \Cake\Http\Response|null|void Redirects on successful edit, renders view otherwise.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function edit($slug)
+    public function edit($id = null)
     {
-        $article = $this->Articles
-            ->findBySlug($slug)
-            ->firstOrFail();
+        $this->request->allowMethod(['PATCH']);
+        $article = $this->Articles->get($id);
         $this->Authorization->authorize($article);
-
-        if ($this->request->is(['post', 'put'])) {
-            $this->Articles->patchEntity($article, $this->request->getData(), [
-                // Added: Disable modification of user_id.
-                'accessibleFields' => ['user_id' => false],
-            ]);
-            if ($this->Articles->save($article)) {
-                $this->Flash->success(__('Your article has been updated.'));
-
-                return $this->redirect(['action' => 'index']);
-            }
-            $this->Flash->error(__('Unable to add your article.'));
+        $article = $this->Articles->patchEntity($article, $this->request->getData());
+        if ($this->Articles->save($article)) {
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(200)
+                ->withStringBody(json_encode([
+                    'message' => 'Article successfully updated.',
+                    'article' => $article
+                ]));
         }
-        $this->set(compact('article'));
+
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(422)
+            ->withStringBody(json_encode([
+                'message' => 'Failed to update article.',
+                'errors' => $article->getErrors()
+            ]));
     }
-
-    /**
-     * Delete method
-     *
-     * @param string|null $slug Article id.
-     * @throws \Cake\Datasource\Exception\RecordNotFoundException When record not found.
-     */
-    public function delete(?string $slug)
+   
+    public function delete($id = null)
     {
-        $this->request->allowMethod(['post', 'delete']);
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
+        $this->request->allowMethod(['DELETE']);
+        $article = $this->Articles->get($id);
         $this->Authorization->authorize($article);
 
-        $article = $this->Articles->findBySlug($slug)->firstOrFail();
         if ($this->Articles->delete($article)) {
-            $this->Flash->success(__('The {0} article has been deleted.', $article->title));
-
-            return $this->redirect(['action' => 'index']);
+            return $this->response
+                ->withType('application/json')
+                ->withStatus(200)
+                ->withStringBody(json_encode([
+                    'message' => 'Article successfully deleted.'
+                ]));
         }
+
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(500)
+            ->withStringBody(json_encode([
+                'message' => 'Failed to delete article.'
+            ]));
     }
 }

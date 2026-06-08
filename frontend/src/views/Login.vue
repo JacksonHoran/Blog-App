@@ -58,12 +58,13 @@ const handleLogin = async () => {
               type="password" />
           </div>
         </fieldset>
-        <div class="flex gap-4">
+        <div class="flex pt-3 gap-4">
           <SubmitButton />
           <router-link
             to="/add-user"
-            class="mt-3 py-1 px-3 bg-blue-300 rounded-xl hover:bg-blue-400 shadow-xl cursor-pointer"
-            >Add User</router-link>
+            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+            Add User</router-link
+          >
         </div>
       </form>
       <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">

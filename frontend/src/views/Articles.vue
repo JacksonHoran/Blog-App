@@ -52,10 +52,13 @@ onMounted(() => {
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
     <div class="p-5">
       <h2 class="text-3xl font-light mb-5">Articles</h2>
-      <router-link
-        class="py-1 px-3 bg-blue-300 rounded-xl hover:bg-blue-400 shadow-xl cursor-pointer"
-        to="/articles/add">
-        New Article</router-link>
+      <div class="mb-8">
+        <router-link
+          to="/articles/add"
+          class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+          New Article
+        </router-link>
+      </div>
       <p v-if="serverError" class="mt-4 text-red-500 font-semibold">
         {{ serverError }}
       </p>

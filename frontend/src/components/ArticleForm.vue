@@ -53,12 +53,12 @@ const handleSubmit = () => {
             rows="5"
             required></textarea>
         </div>
-        <div class="flex gap-4">
-          <SubmitButton :text="buttonText"/>
+        <div class="flex pt-3 gap-4">
+          <SubmitButton :text="buttonText" />
           <router-link
             to="/articles"
-            class="mt-3 py-1 px-3 bg-blue-300 rounded-xl hover:bg-blue-400 shadow-xl cursor-pointer"
-            >Cancel</router-link>
+            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+            Cancel</router-link>
         </div>
       </form>
       <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">

@@ -34,6 +34,20 @@ class ArticlesController extends AppController
             ]));
     }
 
+    public function status()
+    {
+        $this->request->allowMethod(['GET']);
+        $this->Authorization->skipAuthorization();
+        $user = $this->request->getAttribute('identity');
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(200)
+            ->withStringBody(json_encode([
+                'loggedIn' => $user !==null,
+                'user => $user'
+            ]));
+    }
+
     public function add()
     {
         $this->request->allowMethod(['POST']);

@@ -20,9 +20,10 @@ const handleLogout = async () => {
       <router-link to="/articles" class="text-3xl font-semibold cursor-pointer">Full Stack Blog</router-link>
 
     </div>
-    <div>
-      <router-link to="/articles" class="px-2 text-xl cursor-pointer">Articles</router-link>
-      <button @click="handleLogout" class="px-2 text-xl cursor-pointer">Logout</button>
+    <div class="items-center">
+      <router-link to="/articles" class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium">Articles</router-link>
+      <button @click="handleLogout" class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium">Logout</button>
     </div>
   </nav>
 </template>
+          

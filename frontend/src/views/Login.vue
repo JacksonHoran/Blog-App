@@ -70,7 +70,7 @@ const handleLogin = async () => {
           <SubmitButton />
           <router-link
             to="/add-user"
-            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+            class="text-blue-500 hover:text-blue-700 transition-colors font-medium">
             Add User</router-link
           >
         </div>

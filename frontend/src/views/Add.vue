@@ -9,16 +9,12 @@ const router = useRouter();
 const serverError = ref("");
 
 const handleSubmit = async (payload) => {
-  serverError.value = "";
   try {
-    await api.post("/articles.json", payload);
+    const response = await api.post("/articles/add.json", payload);
     router.push("/articles");
   } catch (error) {
-    if (error.response && error.response.stratus === 422) {
-      serverError.value = error.response.data.message;
-    } else {
-      serverError.value = "Failed to create the article. Please try again.";
-    }
+    serverError.value = "Failed to edit the article. Please try again.";
+    console.error(error);
   }
 };
 </script>
@@ -26,7 +22,6 @@ const handleSubmit = async (payload) => {
 <template>
   <Nav />
   <ArticleForm 
-    button-text="Create Article"
     :error-message="serverError"
     @submit-form="handleSubmit" />
 </template>

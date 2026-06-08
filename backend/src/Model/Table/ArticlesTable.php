@@ -82,11 +82,6 @@ class ArticlesTable extends Table
             ->scalar('body')
             ->requirePresence('body', 'create')
             ->notEmptyString('body');
-
-        $validator
-            ->boolean('published')
-            ->requirePresence('published', 'create')
-            ->notEmptyString('published');
         return $validator;
     }
 

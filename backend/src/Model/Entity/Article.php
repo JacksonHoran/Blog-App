@@ -14,10 +14,8 @@ use Cake\Collection\Collection;
  * @property string $title
  * @property string $slug
  * @property string $body
- * @property bool $published
  * @property \Cake\I18n\DateTime $created
  * @property \Cake\I18n\DateTime $modified
- *
  * @property \App\Model\Entity\User $user
  */
 class Article extends Entity
@@ -36,7 +34,6 @@ class Article extends Entity
         'title' => true,
         'slug' => true,
         'body' => true,
-        'published' => true,
         'created' => true,
         'modified' => true,
         'user' => true,

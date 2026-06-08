@@ -22,7 +22,7 @@ class ArticlesController extends AppController
 
     public function view($id = null)
     {
-        $this->request->allowMethoid(['GET']);
+        $this->request->allowMethod(['GET']);
         $this->Authorization->skipAuthorization();
         $article = $this->Articles->get($id);
         return $this->response
@@ -36,17 +36,16 @@ class ArticlesController extends AppController
 
     public function add()
     {
-        $this->request->allowMethod(['POST']);
-        $article = $this->Articles->newEmptyEntity();
-        $article = $this->Articles->patchEntity($article, $this->request->getData());
+        $this->request->allowMethod(['POST', 'OPTIONS']);
         $user = $this->request->getAttribute('identity');
-        $article->user_id = $user->$user->getIdentifier();
+        $article = $this->Articles->newEntity($this->request->getData());
+        $article->user_id = $user ? $user->getIdentifier() : null; 
 
         if ($this->Articles->save($article)) {
             return $this->response
                 ->withType('application/json')
                 ->withStatus(201)
-                ->withStringbody(json_encode([
+                ->withStringBody(json_encode([
                     'message' => 'Article successfully created.',
                     'article' => $article
                 ]));

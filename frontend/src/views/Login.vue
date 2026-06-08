@@ -3,7 +3,7 @@ import api from "@/services/api";
 import SubmitButton from "@/components/SubmitButton.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuth } from '@/composables/useAuth';
+import { useAuth } from "@/composables/useAuth";
 
 const router = useRouter();
 const { login } = useAuth();
@@ -36,9 +36,13 @@ const handleLogin = async () => {
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     <div class="space-x-4 flex items-center">
       <router-link
-        to="/articles"
+        to="/articles-public"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Articles</router-link>
+      <router-link
+        to="/add-user"
+        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
+        >Add User</router-link>
     </div>
   </nav>
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">

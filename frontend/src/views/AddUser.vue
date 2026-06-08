@@ -1,5 +1,4 @@
 <script setup>
-import Nav from "@/components/Nav.vue";
 import api from "@/services/api";
 import SubmitButton from "@/components/SubmitButton.vue";
 import { useRoute } from "vue-router";
@@ -32,7 +31,20 @@ const handleSubmit = async () => {
 </script>
 
 <template>
-  <Nav />
+  <nav
+    class="flex max-w-200 mx-auto mb-4 px-1 py-4 items-center justify-between">
+    <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
+    <div class="space-x-4 flex items-center">
+      <router-link
+        to="/articles-public"
+        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
+        >Articles</router-link>
+      <router-link
+        to="/login"
+        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
+        >Login</router-link>
+    </div>
+  </nav>
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
     <div class="p-5">
       <h2 class="text-3xl font-light">Add New User</h2>
@@ -63,7 +75,8 @@ const handleSubmit = async () => {
           <router-link
             to="/login"
             class="text-blue-500 hover:text-blue-700 transition-colors font-medium">
-            Cancel</router-link>
+            Cancel</router-link
+          >
         </div>
       </form>
       <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">

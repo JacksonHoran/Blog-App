@@ -5,25 +5,25 @@ import Edit from "@/views/Edit.vue";
 import Login from "@/views/Login.vue";
 import AddUser from "@/views/AddUser.vue";
 import ViewArticle from "@/views/ViewArticle.vue";
-
+import { useAuth } from "@/composables/useAuth";
 
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
-        path: "/login",
-        name: "login",
-        component: Login,
+      path: "/login",
+      name: "login",
+      component: Login,
     },
     {
-        path: "/logout",
-        name: "logout",
-        component: Login,
+      path: "/logout",
+      name: "logout",
+      component: Login,
     },
     {
-      path: '/add-user',
-      name: 'add-user',
-      component: AddUser
+      path: "/add-user",
+      name: "add-user",
+      component: AddUser,
     },
     {
       path: "/articles",
@@ -46,12 +46,23 @@ const router = createRouter({
       component: Edit,
     },
     {
-        path: '/articles/delete/:id',
-        name: 'delete-article',
-        component: Articles,
+      path: "/articles/delete/:id",
+      name: "delete-article",
+      component: Articles,
     },
-
   ],
+});
+
+router.beforeEach(async (to, from, next) => {
+  const { isLoggedIn } = useAuth();
+  const publicPages = ["login", "add-user", "articles-list", "article-details"];
+  const authRequired = !publicPages.includes(to.name);
+
+  if (authRequired && !isLoggedIn.value) {
+    return next("/login");
+  }
+
+  next();
 });
 
 export default router;

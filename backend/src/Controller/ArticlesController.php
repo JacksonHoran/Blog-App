@@ -43,8 +43,8 @@ class ArticlesController extends AppController
             ->withType('application/json')
             ->withStatus(200)
             ->withStringBody(json_encode([
-                'loggedIn' => $user !==null,
-                'user => $user'
+                'loggedIn' => $user !== null,
+                'user' => $user
             ]));
     }
 

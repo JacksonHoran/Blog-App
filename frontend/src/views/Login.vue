@@ -1,13 +1,12 @@
 <script setup>
-import Nav from "@/components/Nav.vue";
 import api from "@/services/api";
 import SubmitButton from "@/components/SubmitButton.vue";
-import { useRoute } from "vue-router";
 import { ref } from "vue";
-import router from "@/router";
+import { useRouter } from "vue-router";
+import { useAuth } from '@/composables/useAuth';
 
-const route = useRoute();
-
+const router = useRouter();
+const { login } = useAuth();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -19,7 +18,7 @@ const handleLogin = async () => {
       email: email.value,
       password: password.value,
     });
-    console.log("Logged in: ", response.data);
+    login(response.data.user);
     router.push("/articles");
   } catch (error) {
     if (error.response && error.response.status === 401) {
@@ -32,7 +31,16 @@ const handleLogin = async () => {
 </script>
 
 <template>
-  <Nav />
+  <nav
+    class="flex max-w-200 mx-auto mb-4 px-1 py-4 items-center justify-between">
+    <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
+    <div class="space-x-4 flex items-center">
+      <router-link
+        to="/articles"
+        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
+        >Articles</router-link>
+    </div>
+  </nav>
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
     <div class="p-5">
       <h2 class="text-3xl font-light">Login</h2>

@@ -36,7 +36,8 @@ class ArticlesController extends AppController
 
     public function add()
     {
-        $this->request->allowMethod(['POST', 'OPTIONS']);
+        $this->request->allowMethod(['POST']);
+        $this->Authorization->skipAuthorization();
         $user = $this->request->getAttribute('identity');
         $article = $this->Articles->newEntity($this->request->getData());
         $article->user_id = $user ? $user->getIdentifier() : null; 

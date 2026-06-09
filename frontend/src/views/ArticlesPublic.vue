@@ -19,6 +19,14 @@ const fetchArticles = async () => {
 onMounted(() => {
   fetchArticles();
 });
+
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(dateString));
+};
 </script>
 
 <template>
@@ -53,8 +61,8 @@ onMounted(() => {
             class="bg-slate-50 border-b border-slate-200 uppercase tracking-wider text-slate-500">
             <tr>
               <th class="px-6 py-4 font-medium">Title</th>
-              <th class="px-6 py-4 font-medium text-center">Created</th>
-              <th class="px-6 py-4 font-medium text-center">Actions</th>
+              <th class="px-6 py-4 font-medium text-left">Created</th>
+              <th class="px-6 py-4 font-medium text-left">Actions</th>
             </tr>
           </thead>
           <tbody class="divide-y divide-slate-200">
@@ -65,10 +73,10 @@ onMounted(() => {
               <td class="px-6 py-4 font-light text-slate-800">
                 {{ article.title }}
               </td>
-              <td class="px-6 py-4 text-center font-light text-slate-500">
-                {{ article.created }}
+              <td class="px-6 py-4 text-left font-light text-slate-500">
+                {{ formatDate(article.created) }}
               </td>
-              <td class="px-6 py-4 font-medium text-right space-x-4">
+              <td class="px-6 py-4 font-medium text-left space-x-4">
                 <router-link
                   :to="`/articles/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">

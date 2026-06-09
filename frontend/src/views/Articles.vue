@@ -45,6 +45,14 @@ const confirmDelete = async () => {
 onMounted(() => {
   fetchArticles();
 });
+
+const formatDate = (dateString) => {
+  if (!dateString) return "";
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
+  }).format(new Date(dateString));
+};
 </script>
 
 <template>
@@ -83,7 +91,7 @@ onMounted(() => {
                 {{ article.title }}
               </td>
               <td class="px-6 py-4 font-light text-slate-500">
-                {{ article.created }}
+                {{ formatDate(article.created) }}
               </td>
               <td class="px-6 py-4 font-medium text-right space-x-4">
                 <router-link :to="`/articles/${article.id}`" class="text-blue-500 hover:text-blue-700 transition-colors">

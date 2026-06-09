@@ -15,8 +15,16 @@ class UsersController extends AppController
 
     public function view($id = null)
     {
-        $user = $this->Users->get($id, contain: ['Articles']);
-        $this->set(compact('user'));
+        $this->request->allowMethod(['GET']);
+        $this->Authorization->skipAuthorization();
+        $user = $this->Users->get($id);
+        return $this->response
+            ->withType('application/json')
+            ->withStatus(200)
+            ->withStringBody(json_encode([
+                'message' => 'User successfully retrieved.',
+                'user' => $user
+            ]));
     }
 
     public function add()

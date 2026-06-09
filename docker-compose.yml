@@ -1,0 +1,52 @@
+services:
+  db:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
+      MYSQL_DATABASE: ${DB_DATABASE}
+    ports:
+      - "3307:3306"            # optional: lets him connect a DB GUI from his host
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./db/init:/docker-entrypoint-initdb.d   # any *.sql here auto-imports on first run
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-p${DB_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  backend:
+    build: ./backend
+    working_dir: /app/backend
+    env_file: ./.env
+    environment:
+      - DB_HOST=db            # override: reach MySQL by service name inside Docker
+    volumes:
+      - ./backend:/app/backend
+      - backend_vendor:/app/backend/vendor
+    ports:
+      - "8765:8765"
+    depends_on:
+      db:
+        condition: service_healthy
+    command: sh -c "composer install && php bin/cake.php migrations migrate && php bin/cake.php server -H 0.0.0.0 -p 8765"
+
+  frontend:
+    image: node:20
+    working_dir: /app/frontend
+    environment:
+      - BACKEND_URL=http://backend:8765   # Vite proxy target inside Docker
+      - VITE_API_BASE_URL=/api
+    volumes:
+      - ./frontend:/app/frontend
+      - frontend_node_modules:/app/frontend/node_modules
+    ports:
+      - "5174:5174"
+    depends_on:
+      - backend
+    command: sh -c "npm install && npm run dev -- --host 0.0.0.0 --port 5174"
+
+volumes:
+  dbdata:
+  backend_vendor:
+  frontend_node_modules:

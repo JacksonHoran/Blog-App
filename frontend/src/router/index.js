@@ -7,6 +7,7 @@ import AddUser from "@/views/AddUser.vue";
 import ViewArticle from "@/views/ViewArticle.vue";
 import { useAuth } from "@/composables/useAuth";
 import ArticlesPublic from "@/views/ArticlesPublic.vue";
+import ViewArticlePublic from "@/views/ViewArticlePublic.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -42,6 +43,11 @@ const router = createRouter({
       component: ViewArticle,
     },
     {
+      path: "/articles-public/:id",
+      name: "article-details-public",
+      component: ViewArticlePublic,
+    },
+    {
       path: "/articles/add",
       name: "add-article",
       component: Add,
@@ -61,7 +67,7 @@ const router = createRouter({
 
 router.beforeEach(async (to, from, next) => {
   const { isLoggedIn } = useAuth();
-  const publicPages = ["login", "add-user", "articles-list-public"];
+  const publicPages = ["login", "add-user", "articles-list-public", "article-details-public"];
   const authRequired = !publicPages.includes(to.name);
 
   if (authRequired && !isLoggedIn.value) {

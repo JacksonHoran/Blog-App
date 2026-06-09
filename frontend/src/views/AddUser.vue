@@ -36,13 +36,13 @@ const handleSubmit = async () => {
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     <div class="space-x-4 flex items-center">
       <router-link
-        to="/articles-public"
-        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
-        >Articles</router-link>
-      <router-link
         to="/login"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Login</router-link>
+      <router-link
+        to="/articles-public"
+        class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
+        >Articles</router-link>
     </div>
   </nav>
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">

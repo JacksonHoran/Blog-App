@@ -78,7 +78,7 @@ const formatDate = (dateString) => {
               </td>
               <td class="px-6 py-4 font-medium text-left space-x-4">
                 <router-link
-                  :to="`/articles/${article.id}`"
+                  :to="`/articles-public/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">
                   View
                 </router-link>

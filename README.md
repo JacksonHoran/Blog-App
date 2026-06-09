@@ -48,8 +48,8 @@ SECURITY_SALT=
 DB_HOST=localhost
 DB_PORT=3306
 DB_USERNAME=root
-DB_PASSWORD=change_me
-DB_DATABASE=cake_tutorial
+DB_PASSWORD=your_password_goes_here
+DB_DATABASE=your_preferred_db_name_goes_here
 
 VITE_API_BASE_URL=/api
 ```

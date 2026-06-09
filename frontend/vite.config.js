@@ -10,6 +10,9 @@ export default defineConfig({
     vueDevTools(),
     tailwindcss(),
   ],
+  envDir: fileURLToPath(new URL('./', import.meta.url)).includes('frontend')
+    ? fileURLToPath(new URL('../', import.meta.url))
+    : './',
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
@@ -21,7 +24,7 @@ export default defineConfig({
       '/api': {
         target: 'http://localhost:8765',
         changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, '') 
+        rewrite: (path) => path.replace(/^\/api/, '')
       }
     }
   }

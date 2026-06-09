@@ -42,19 +42,19 @@ const formatDate = (dateString) => {
   <div class="mb-5">
     <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
       <div class="p-5">
+        <div class="mb-5">
+          <router-link
+            to="/articles"
+            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+            &larr; All Articles
+          </router-link>
+        </div>
         <h2 class="text-3xl font-light mb-2">
           {{ fetchedArticle.title }}
         </h2>
         <p class="mb-6 text-slate-400 font-medium">
           Written by: {{ userEmail }}
         </p>
-        <div class="mb-8">
-          <router-link
-            to="/articles"
-            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
-            &larr; Back to Articles
-          </router-link>
-        </div>
         <p
           v-if="errorMessage"
           class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">

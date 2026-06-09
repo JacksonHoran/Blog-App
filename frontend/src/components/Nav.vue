@@ -18,7 +18,7 @@ const handleLogout = async () => {
 </script>
 
 <template>
-  <nav class="flex max-w-200 mx-auto mb-4 px-1 py-4 items-center justify-between">
+  <nav class="flex max-w-200 mx-auto mb-4 px-3 py-4 items-center justify-between">
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     
     <div class="space-x-4 flex items-center">

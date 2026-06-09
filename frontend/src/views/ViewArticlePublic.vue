@@ -7,7 +7,7 @@ import { useApiError } from "@/composables/useApiError";
 const { getErrorMessage } = useApiError();
 const router = useRouter();
 const route = useRoute();
-const serverError = ref("");
+const errorMessage = ref("");
 const fetchedArticle = ref({});
 const userEmail = ref("");
 
@@ -23,7 +23,7 @@ onMounted(async () => {
     fetchedArticle.value.created = formatDate(fetchedArticle.value.created);
     userEmail.value = userResponse.data.user.email;
   } catch (error) {
-    serverError.value = getErrorMessage(error, "article");
+    errorMessage.value = getErrorMessage(error, "article");
     console.error(error);
   }
 });
@@ -39,7 +39,7 @@ const formatDate = (dateString) => {
 
 <template>
   <nav
-    class="flex max-w-200 mx-auto mb-4 px-1 py-4 items-center justify-between">
+    class="flex max-w-200 mx-auto mb-4 px-3 py-4 items-center justify-between">
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     <div class="space-x-4 flex items-center">
       <router-link
@@ -57,23 +57,23 @@ const formatDate = (dateString) => {
   <div class="mb-5">
     <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
       <div class="p-5">
+        <div class="mb-5">
+          <router-link
+            to="/articles-public"
+            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
+            &larr; All Articles
+          </router-link>
+        </div>
         <h2 class="text-3xl font-light mb-2">
           {{ fetchedArticle.title }}
         </h2>
         <p class="mb-6 text-slate-400 font-medium">
           Written by: {{ userEmail }}
         </p>
-        <div class="mb-8">
-          <router-link
-            to="/articles-public"
-            class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
-            &larr; Back to Articles
-          </router-link>
-        </div>
         <p
-          v-if="serverError"
+          v-if="errorMessage"
           class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
-          {{ serverError }}
+          {{ errorMessage }}
         </p>
         <div v-else class="mt-4">
           <p class="text-lg whitespace-pre-wrap">

@@ -85,27 +85,32 @@ const formatDate = (dateString) => {
       <div
         v-else
         class="mt-6 overflow-x-auto bg-white rounded-lg shadow-sm border border-slate-200">
-        <table class="min-w-full text-left text-sm whitespace-nowrap">
+        <table class="min-w-full text-left text-sm">
           <thead
             class="bg-slate-50 border-b border-slate-200 uppercase tracking-wider text-slate-500">
             <tr>
               <th class="px-6 py-4 font-medium">Title</th>
-              <th class="px-6 py-4 font-medium">Created</th>
-              <th class="px-6 py-4 font-medium text-center">Actions</th>
+              <th class="px-6 py-4 font-medium hidden sm:table-cell">
+                Created
+              </th>
+              <th class="px-6 py-4 font-medium text-right">Actions</th>
             </tr>
           </thead>
-          <tbody class="divide-y divide-slate-200">
+          <tbody>
             <tr
               v-for="article in articles"
               :key="article.id"
               class="hover:bg-slate-50 transition-colors">
-              <td class="px-6 py-4 font-light text-slate-800">
+              <td
+                class="px-6 py-4 font-light text-slate-800 max-w-40 truncate">
                 {{ article.title }}
               </td>
-              <td class="px-6 py-4 font-light text-slate-500">
+              <td
+                class="px-6 py-4 font-light text-slate-500 hidden sm:table-cell whitespace-nowrap">
                 {{ formatDate(article.created) }}
               </td>
-              <td class="px-6 py-4 font-medium text-right space-x-4">
+              <td
+                class="px-6 py-4 font-medium text-right whitespace-nowrap space-x-4">
                 <router-link
                   :to="`/articles/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">

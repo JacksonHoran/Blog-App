@@ -61,7 +61,9 @@ const handleSubmit = () => {
             Cancel</router-link>
         </div>
       </form>
-      <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">
+      <p
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
         {{ errorMessage }}
       </p>
     </div>

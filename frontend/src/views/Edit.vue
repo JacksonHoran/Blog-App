@@ -4,7 +4,9 @@ import { useRouter, useRoute } from "vue-router";
 import api from "@/services/api";
 import ArticleForm from "@/components/ArticleForm.vue";
 import Nav from "@/components/Nav.vue";
+import { useApiError } from "@/composables/useApiError";
 
+const { getErrorMessage } = useApiError();
 const router = useRouter();
 const route = useRoute();
 const serverError = ref("");
@@ -15,17 +17,18 @@ onMounted(async () => {
     const response = await api.get(`/articles/view/${route.params.id}.json`);
     fetchedArticle.value = response.data.article;
   } catch (error) {
-    serverError.value = "Failed to fetch the article. Please try again.";
+    serverError.value = getErrorMessage(error, "article");
     console.error(error);
   }
 });
 
 const handleEditSubmit = async (payload) => {
+  serverError.value = "";
   try {
     await api.patch(`/articles/edit/${route.params.id}.json`, payload);
     router.push("/articles");
   } catch (error) {
-    serverError.value = "Failed to edit the article. Please try again.";
+    serverError.value = getErrorMessage(error, "article");
     console.error(error);
   }
 };

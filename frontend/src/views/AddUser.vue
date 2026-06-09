@@ -4,9 +4,10 @@ import SubmitButton from "@/components/SubmitButton.vue";
 import { useRoute } from "vue-router";
 import { ref } from "vue";
 import router from "@/router";
+import { useApiError } from "@/composables/useApiError";
 
 const route = useRoute();
-
+const { getErrorMessage } = useApiError();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -21,10 +22,10 @@ const handleSubmit = async () => {
     console.log("User added: ", response.data);
     router.push("/login");
   } catch (error) {
-    if (error.response && error.response.status === 422) {
-      errorMessage.value = error.response.data.message;
+    if (error.response?.status === 422) {
+      errorMessage.value = "User already exists. Try another email.";
     } else {
-      errorMessage.value = "A server error occurred. Please try again later.";
+      errorMessage.value = getErrorMessage(error);
     }
   }
 };
@@ -75,11 +76,12 @@ const handleSubmit = async () => {
           <router-link
             to="/login"
             class="text-blue-500 hover:text-blue-700 transition-colors font-medium">
-            Cancel</router-link
-          >
+            Cancel</router-link>
         </div>
       </form>
-      <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">
+      <p
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
         {{ errorMessage }}
       </p>
     </div>

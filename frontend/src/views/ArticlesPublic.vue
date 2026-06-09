@@ -1,17 +1,19 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/services/api";
+import { useApiError } from "@/composables/useApiError";
 
-const serverError = ref("");
+const { getErrorMessage } = useApiError();
+const errorMessage = ref("");
 const articles = ref([]);
 
 const fetchArticles = async () => {
+  errorMessage.value = "";
   try {
     const response = await api.get("/articles.json");
-    console.log("Raw API Response:", response.data);
     articles.value = response.data.articles;
   } catch (error) {
-    serverError.value = "Failed to fetch articles. Please try again.";
+    errorMessage.value = getErrorMessage(error, "article list");
     console.error(error);
   }
 };
@@ -47,10 +49,14 @@ const formatDate = (dateString) => {
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
     <div class="p-5">
       <h2 class="text-3xl font-light mb-5">Articles</h2>
-      <p v-if="serverError" class="mt-4 text-red-500 font-semibold">
-        {{ serverError }}
+      <p
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
+        {{ errorMessage }}
       </p>
-      <p v-else-if="articles.length === 0" class="text-xl text-center py-5 font-light">
+      <p
+        v-else-if="articles.length === 0"
+        class="text-xl text-center py-5 font-light">
         No articles published. Please write one.
       </p>
       <div

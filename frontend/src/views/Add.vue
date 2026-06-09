@@ -4,16 +4,19 @@ import { useRouter } from "vue-router";
 import api from "@/services/api";
 import ArticleForm from "@/components/ArticleForm.vue";
 import Nav from "@/components/Nav.vue";
+import { useApiError } from "@/composables/useApiError";
 
+const { getErrorMessage } = useApiError();
 const router = useRouter();
 const serverError = ref("");
 
 const handleSubmit = async (payload) => {
+  serverError.value = "";
   try {
-    const response = await api.post("/articles/add.json", payload);
+    await api.post("/articles/add.json", payload);
     router.push("/articles");
   } catch (error) {
-    serverError.value = "Failed to edit the article. Please try again.";
+    serverError.value = getErrorMessage(error, "article");
     console.error(error);
   }
 };

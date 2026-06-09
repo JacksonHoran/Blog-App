@@ -3,10 +3,11 @@ import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import api from "@/services/api";
 import Nav from "@/components/Nav.vue";
+import { useApiError } from "@/composables/useApiError";
 
-const router = useRouter();
+const { getErrorMessage } = useApiError();
 const route = useRoute();
-const serverError = ref("");
+const errorMessage = ref("");
 const fetchedArticle = ref({});
 const userEmail = ref("");
 
@@ -22,17 +23,17 @@ onMounted(async () => {
     fetchedArticle.value.created = formatDate(fetchedArticle.created)
     userEmail.value = userResponse.data.user.email;
   } catch (error) {
-    serverError.value = "Failed to fetch the article. Please try again.";
+    errorMessage.value = getErrorMessage(error, "article");
     console.error(error);
   }
 });
 
 const formatDate = (dateString) => {
-  return new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
   }).format(dateString);
-}
+};
 </script>
 
 <template>
@@ -54,9 +55,9 @@ const formatDate = (dateString) => {
           </router-link>
         </div>
         <p
-          v-if="serverError"
+          v-if="errorMessage"
           class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
-          {{ serverError }}
+          {{ errorMessage }}
         </p>
         <div v-else class="mt-4">
           <p class="text-lg whitespace-pre-wrap">

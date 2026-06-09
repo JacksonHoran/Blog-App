@@ -1,22 +1,23 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import router from "@/router";
 import api from "@/services/api";
 import Nav from "@/components/Nav.vue";
+import { useApiError } from "@/composables/useApiError";
 
-const serverError = ref("");
-const wrongUserError = ref("");
+const { getErrorMessage } = useApiError();
+const errorMessage = ref("");
+const deleteErrorMessage = ref("");
 const articles = ref([]);
 const isDeleteModalOpen = ref(false);
 const articleToDelete = ref(null);
 
 const fetchArticles = async () => {
+  errorMessage.value = "";
   try {
     const response = await api.get("/articles.json");
-    console.log("Raw API Response:", response.data);
     articles.value = response.data.articles;
   } catch (error) {
-    serverError.value = "Failed to fetch articles. Please try again.";
+    errorMessage.value = getErrorMessage(error, "article list");
     console.error(error);
   }
 };
@@ -29,18 +30,19 @@ const promptDelete = (id) => {
 const cancelDelete = () => {
   isDeleteModalOpen.value = false;
   articleToDelete.value = null;
-  wrongUserError.value = "";
+  deleteErrorMessage.value = "";
 };
 
 const confirmDelete = async () => {
   if (!articleToDelete.value) return;
+  deleteErrorMessage.value = "";
   try {
     await api.delete(`/articles/delete/${articleToDelete.value}.json`);
     await fetchArticles();
     isDeleteModalOpen.value = false;
     articleToDelete.value = null;
   } catch (error) {
-    wrongUserError.value = "Cannot delete an article you do not own.";
+    deleteErrorMessage.value = getErrorMessage(error, "article");
     console.error("Article deletion failed:", error);
   }
 };
@@ -71,9 +73,9 @@ const formatDate = (dateString) => {
         </router-link>
       </div>
       <p
-        v-if="serverError"
+        v-if="errorMessage"
         class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
-        {{ serverError }}
+        {{ errorMessage }}
       </p>
       <p
         v-else-if="articles.length === 0"
@@ -132,14 +134,14 @@ const formatDate = (dateString) => {
     <div
       class="bg-white p-6 rounded-xl shadow-2xl max-w-sm w-full mx-4 transform transition-all">
       <h3 class="text-xl font-medium text-slate-800 mb-2">Delete Article?</h3>
-      <p v-if="!wrongUserError" class="text-slate-500 font-light mb-6">
+      <p
+        v-if="deleteErrorMessage"
+        class="mb-5 p-4 text-sm bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
+        {{ deleteErrorMessage }}
+      </p>
+      <p v-else class="text-slate-500 font-light mb-6">
         Are you sure you want to delete this article? This action cannot be
         undone.
-      </p>
-      <p
-        v-if="wrongUserError"
-        class="mb-5 p-4 text-sm bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
-        {{ wrongUserError }}
       </p>
       <div class="flex justify-end space-x-3">
         <button

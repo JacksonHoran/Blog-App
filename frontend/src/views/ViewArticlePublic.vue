@@ -2,8 +2,9 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import api from "@/services/api";
-import Nav from "@/components/Nav.vue";
+import { useApiError } from "@/composables/useApiError";
 
+const { getErrorMessage } = useApiError();
 const router = useRouter();
 const route = useRoute();
 const serverError = ref("");
@@ -19,20 +20,20 @@ onMounted(async () => {
       `/users/view/${ArticleResponse.data.article.user_id}.json`,
     );
     fetchedArticle.value = ArticleResponse.data.article;
-    fetchedArticle.value.created = formatDate(fetchedArticle.created)
+    fetchedArticle.value.created = formatDate(fetchedArticle.value.created);
     userEmail.value = userResponse.data.user.email;
   } catch (error) {
-    serverError.value = "Failed to fetch the article. Please try again.";
+    serverError.value = getErrorMessage(error, "article");
     console.error(error);
   }
 });
 
 const formatDate = (dateString) => {
-  return new Intl.DateTimeFormat('en-US', {
-    dateStyle: 'medium',
-    timeStyle: 'short',
+  return new Intl.DateTimeFormat("en-US", {
+    dateStyle: "medium",
+    timeStyle: "short",
   }).format(dateString);
-}
+};
 </script>
 
 <template>
@@ -43,11 +44,13 @@ const formatDate = (dateString) => {
       <router-link
         to="/login"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
-        >Login</router-link>
+        >Login</router-link
+      >
       <router-link
         to="/articles-public"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
-        >Articles</router-link>
+        >Articles</router-link
+      >
     </div>
   </nav>
   <div class="mb-5">

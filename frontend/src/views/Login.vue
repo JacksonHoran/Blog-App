@@ -4,9 +4,11 @@ import SubmitButton from "@/components/SubmitButton.vue";
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuth } from "@/composables/useAuth";
+import { useApiError } from "@/composables/useApiError";
 
 const router = useRouter();
 const { login } = useAuth();
+const { getErrorMessage } = useApiError();
 const email = ref("");
 const password = ref("");
 const errorMessage = ref("");
@@ -21,10 +23,10 @@ const handleLogin = async () => {
     login(response.data.user);
     router.push("/articles");
   } catch (error) {
-    if (error.response && error.response.status === 401) {
+    if (error.response?.status === 401) {
       errorMessage.value = error.response.data.message;
     } else {
-      errorMessage.value = "A server error occurred. Please try again later.";
+      errorMessage.value = getErrorMessage(error);
     }
   }
 };
@@ -38,11 +40,13 @@ const handleLogin = async () => {
       <router-link
         to="/articles-public"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
-        >Articles</router-link>
+        >Articles</router-link
+      >
       <router-link
         to="/add-user"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
-        >Add User</router-link>
+        >Add User</router-link
+      >
     </div>
   </nav>
   <div class="bg-slate-100 max-w-200 mx-auto shadow-xl">
@@ -79,7 +83,9 @@ const handleLogin = async () => {
           >
         </div>
       </form>
-      <p v-if="errorMessage" class="mt-4 text-red-500 font-semibold">
+      <p
+        v-if="errorMessage"
+        class="mt-4 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg font-semibold">
         {{ errorMessage }}
       </p>
     </div>

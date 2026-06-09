@@ -26,7 +26,6 @@ class ArticlesSeed extends BaseSeed
                 'title' => 'First Post',
                 'slug' => 'first-post',
                 'body' => 'This is the first post.',
-                'published' => true,
                 'created' => date('Y-m-d H:i:s'),
                 'modified' => date('Y-m-d H:i:s'),
             ],

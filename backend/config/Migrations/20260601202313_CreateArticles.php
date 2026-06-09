@@ -35,10 +35,6 @@ class CreateArticles extends BaseMigration
             'default' => null,
             'null' => false,
         ]);
-        $table->addColumn('published', 'boolean', [
-            'default' => null,
-            'null' => false,
-        ]);
         $table->addColumn('created', 'datetime', [
             'default' => null,
             'null' => false,

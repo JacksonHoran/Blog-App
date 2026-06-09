@@ -50,8 +50,8 @@ const formatDate = (dateString) => {
       <p v-if="serverError" class="mt-4 text-red-500 font-semibold">
         {{ serverError }}
       </p>
-      <p v-else-if="articles.length === 0">
-        No articles found. Please write one.
+      <p v-else-if="articles.length === 0" class="text-xl text-center py-5 font-light">
+        No articles published. Please write one.
       </p>
       <div
         v-else

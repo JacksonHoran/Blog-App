@@ -29,10 +29,11 @@ onMounted(async () => {
 });
 
 const formatDate = (dateString) => {
-  return new Intl.DateTimeFormat("en-US", {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(dateString);
+  if (!dateString) return "";
+  return new Intl.DateTimeFormat('en-US', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+  }).format(new Date(dateString));
 };
 </script>
 

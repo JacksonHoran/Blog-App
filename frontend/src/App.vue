@@ -10,7 +10,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <main class="min-h-screen bg-slate-200">
+  <main class="bg-slate-200 min-h-screen pb-10">
     <router-view />
   </main>
 </template>

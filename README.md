@@ -76,7 +76,7 @@ If that prints system info instead of an error, you're good to go.
 From the project root:
 
 ```bash
-docker compose up --build
+docker-compose up --build
 ```
 
 The **first run takes a few minutes** — it builds the backend image, installs Composer and npm dependencies, starts MySQL, and runs the database migrations to create all the tables automatically. You do **not** need to set up the database by hand.
@@ -93,14 +93,14 @@ The frontend automatically proxies API requests to the CakePHP backend, so every
 
 | Command | What it does |
 |---|---|
-| `docker compose up` | Start everything (after the first build) |
-| `docker compose up --build` | Start and rebuild — use after changing the Dockerfile or dependencies |
-| `docker compose up -d` | Start in the background (detached) |
-| `docker compose logs -f` | Watch the logs |
-| `docker compose down` | Stop and remove the containers (database is kept) |
-| `docker compose down -v` | Stop **and wipe the database** for a clean start |
+| `docker-compose up` | Start everything (after the first build) |
+| `docker-compose up --build` | Start and rebuild — use after changing the Dockerfile or dependencies |
+| `docker-compose up -d` | Start in the background (detached) |
+| `docker-compose logs -f` | Watch the logs |
+| `docker-compose down` | Stop and remove the containers (database is kept) |
+| `docker-compose down -v` | Stop **and wipe the database** for a clean start |
 
-After the first `--build`, you normally just run `docker compose up`. Your database data persists between restarts — only `docker compose down -v` resets it.
+After the first `--build`, you normally just run `docker compose up`. Your database data persists between restarts — only `docker-compose down -v` resets it.
 
 ## Ports
 
@@ -124,6 +124,6 @@ Something on your machine is already using one of the ports above (commonly a lo
 Reset the database so migrations re-run on a clean slate:
 
 ```bash
-docker compose down -v
-docker compose up
+docker-compose down -v
+docker-compose up
 ```

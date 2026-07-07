@@ -11,7 +11,7 @@ A full-stack blog application with a **Vue 3 + Vite** frontend and a **CakePHP**
 
 ## Prerequisites
 
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) — installed **and running**
+- [Docker Desktop](https://www.docker.com/products/docker-desktop/) or another Docker provider (e.g. [OrbStack](https://orbstack.dev)) — installed **and running**
 - Git
 
 That's all. Docker provides PHP, Node, Composer, and MySQL inside the containers.
@@ -24,7 +24,7 @@ That's all. Docker provides PHP, Node, Composer, and MySQL inside the containers
 
 ```bash
 git clone https://github.com/JacksonHoran/Blog-App
-cd Blog_App
+cd Blog-App
 ```
 
 ### 2. Create the environment file
@@ -49,7 +49,7 @@ DB_HOST=localhost
 DB_PORT=3306
 DB_USERNAME=root
 DB_PASSWORD=your_password_goes_here
-DB_DATABASE=your_preferred_db_name_goes_here
+DB_DATABASE=blog_app
 
 VITE_API_BASE_URL=/api
 ```
@@ -59,11 +59,13 @@ Two values you **must** set before starting:
 - **`DB_PASSWORD`** — must not be empty. MySQL refuses to start with a blank root password. Any non-empty value is fine for local development.
 - **`SECURITY_SALT`** — generate a strong value by running `openssl rand -hex 32` and pasting the result.
 
-> `DB_HOST` is automatically set to `db` inside Docker, so the value in the file only matters if you ever run the app outside of Docker.
+The other values can stay as they are: `DB_USERNAME` must remain `root` (the MySQL container only creates the root account), and `DB_DATABASE` can be any name — the database is created automatically on first run.
 
-### 3. Make sure Docker Desktop is running
+> `DB_HOST` is automatically set to `db` inside Docker, so it (and `DB_PORT`) only matter if you ever run the backend outside of Docker. In that case note that Docker publishes MySQL on host port **3307**, not 3306.
 
-Launch Docker Desktop and wait for it to fully start (the whale icon in the menu bar stops animating). You can confirm it's ready with:
+### 3. Make sure Docker is running
+
+Launch Docker Desktop (or OrbStack) and wait for it to fully start. You can confirm it's ready with:
 
 ```bash
 docker info
@@ -98,9 +100,21 @@ The frontend automatically proxies API requests to the CakePHP backend, so every
 | `docker-compose up -d` | Start in the background (detached) |
 | `docker-compose logs -f` | Watch the logs |
 | `docker-compose down` | Stop and remove the containers (database is kept) |
-| `docker-compose down -v` | Stop **and wipe the database** for a clean start |
+| `docker-compose down -v` | Stop and wipe **all** volumes — database **and** cached PHP/npm dependencies (next start does a slow full reinstall) |
 
-After the first `--build`, you normally just run `docker compose up`. Your database data persists between restarts — only `docker-compose down -v` resets it.
+After the first `--build`, you normally just run `docker-compose up`. Your database data persists between restarts — only wiping the volumes resets it.
+
+To reset **only the database** (fast — keeps the cached dependencies):
+
+```bash
+docker-compose down
+docker volume rm blog_app_dbdata
+docker-compose up
+```
+
+> The volume name comes from the project folder name. If `blog_app_dbdata` isn't found, run `docker volume ls` and remove the one ending in `_dbdata`.
+
+> **Note on logins:** recreating the backend container (`up --build`, `down`/`up`, etc.) clears server-side sessions. The browser may still look logged in afterward, but saving will fail — log out and back in after a restart.
 
 ## Ports
 
@@ -108,22 +122,31 @@ After the first `--build`, you normally just run `docker compose up`. Your datab
 |---|---|
 | `5174` | Frontend (Vue / Vite) — **open this in your browser** |
 | `8765` | Backend (CakePHP API) |
-| `3306` | MySQL |
+| `3307` | MySQL (mapped to the container's 3306 — use 3307 to connect a DB GUI from your machine) |
 
 ---
 
 ## Troubleshooting
 
 **`Cannot connect to the Docker daemon` / `docker.sock ... no such file`**
-Docker Desktop isn't running. Launch it, wait for it to fully start, then retry.
+Docker isn't running. Launch Docker Desktop (or OrbStack), wait for it to fully start, then retry.
+
+**`error getting credentials` / `User canceled the operation. (-128)` during the first build**
+macOS showed a Keychain permission dialog for Docker's credential helper while pulling images, and it was dismissed. Run the command again and click **Always Allow** when the dialog appears (it only asks once). This happens even for public images — no Docker Hub account is needed.
 
 **`port is already allocated`**
-Something on your machine is already using one of the ports above (commonly a local MySQL on `3306`). Either stop that service, or edit the **host** side of the port mapping in `docker-compose.yml` — for example change `"3306:3306"` to `"3307:3306"` — and retry.
+Something on your machine is already using one of the ports above. Either stop that service, or edit the **host** side (the left number) of the port mapping in `docker-compose.yml` — for example change `"3307:3306"` to `"3308:3306"` — and retry.
+
+**Logged in, but saving an article fails or seems to do nothing**
+Your login session was cleared by a backend restart (see the note under Everyday commands). Log out and log back in.
 
 **The app loads but data or tables are missing**
 Reset the database so migrations re-run on a clean slate:
 
 ```bash
-docker-compose down -v
+docker-compose down
+docker volume rm blog_app_dbdata
 docker-compose up
 ```
+
+(If the volume name isn't found, check `docker volume ls`. Or use `docker-compose down -v` for a full reset including cached dependencies — slower on the next start.)

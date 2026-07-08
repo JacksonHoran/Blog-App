@@ -22,8 +22,6 @@ api.interceptors.response.use((response) => {
 export const prefetchGet = (url) => {
   const hit = warm.get(url);
   if (hit && hit.expires > Date.now()) return hit.promise;
-  // Demo breadcrumb — remove for production.
-  console.info("[v-prefetch] warming data", url);
   const promise = api.get(url);
   warm.set(url, { promise, expires: Date.now() + TTL_MS });
   // A failed warm-up must not poison the view's real request later.

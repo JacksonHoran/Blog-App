@@ -25,7 +25,7 @@ const handleLogout = async () => {
       <router-link v-prefetch :to="isLoggedIn ? '/articles' : '/articles-public'" class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium">Articles</router-link>
       
       <template v-if="!isLoggedIn">
-        <router-link to="/login" class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium">Login</router-link>
+        <router-link v-prefetch to="/login" class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium">Login</router-link>
       </template>
 
       <template v-else>

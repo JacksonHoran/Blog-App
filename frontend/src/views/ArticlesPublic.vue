@@ -37,10 +37,12 @@ const formatDate = (dateString) => {
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     <div class="space-x-4 flex items-center">
       <router-link
+        v-prefetch
         to="/login"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Login</router-link>
       <router-link
+        v-prefetch
         to="/add-user"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Add User</router-link>
@@ -89,6 +91,7 @@ const formatDate = (dateString) => {
               <td
                 class="px-6 py-4 font-medium text-right whitespace-nowrap space-x-4">
                 <router-link
+                  v-prefetch
                   :to="`/articles-public/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">
                   View

@@ -44,6 +44,7 @@ const handleLogin = async () => {
         >Articles</router-link
       >
       <router-link
+        v-prefetch
         to="/add-user"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Add User</router-link

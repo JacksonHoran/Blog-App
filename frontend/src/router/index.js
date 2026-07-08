@@ -1,66 +1,67 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Articles from "@/views/Articles.vue";
-import Add from "@/views/Add.vue";
-import Edit from "@/views/Edit.vue";
-import Login from "@/views/Login.vue";
-import AddUser from "@/views/AddUser.vue";
-import ViewArticle from "@/views/ViewArticle.vue";
 import { useAuth } from "@/composables/useAuth";
-import ArticlesPublic from "@/views/ArticlesPublic.vue";
-import ViewArticlePublic from "@/views/ViewArticlePublic.vue";
 
+// Views are lazy-loaded so each becomes its own chunk. Navigation only
+// pays for a chunk the first time it's needed — and the v-prefetch
+// directive can warm it ahead of the click.
 const router = createRouter({
   history: createWebHistory(),
   routes: [
     {
       path: "/login",
       name: "login",
-      component: Login,
+      component: () => import("@/views/Login.vue"),
     },
     {
       path: "/logout",
       name: "logout",
-      component: Login,
+      component: () => import("@/views/Login.vue"),
     },
     {
       path: "/add-user",
       name: "add-user",
-      component: AddUser,
+      component: () => import("@/views/AddUser.vue"),
     },
     {
       path: "/articles",
       name: "articles-list",
-      component: Articles,
+      component: () => import("@/views/Articles.vue"),
+      // v-prefetch warms these URLs on hover; the view consumes them via cachedGet()
+      meta: { prefetch: () => ["/articles.json"] },
     },
     {
       path: "/articles-public",
       name: "articles-list-public",
-      component: ArticlesPublic,
+      component: () => import("@/views/ArticlesPublic.vue"),
+      meta: { prefetch: () => ["/articles.json"] },
     },
     {
       path: "/articles/:id",
       name: "article-details",
-      component: ViewArticle,
+      component: () => import("@/views/ViewArticle.vue"),
+      meta: { prefetch: (to) => [`/articles/view/${to.params.id}.json`] },
     },
     {
       path: "/articles-public/:id",
       name: "article-details-public",
-      component: ViewArticlePublic,
+      component: () => import("@/views/ViewArticlePublic.vue"),
+      meta: { prefetch: (to) => [`/articles/view/${to.params.id}.json`] },
     },
     {
       path: "/articles/add",
       name: "add-article",
-      component: Add,
+      component: () => import("@/views/Add.vue"),
     },
     {
       path: "/articles/edit/:id",
       name: "edit-article",
-      component: Edit,
+      component: () => import("@/views/Edit.vue"),
+      meta: { prefetch: (to) => [`/articles/view/${to.params.id}.json`] },
     },
     {
       path: "/articles/delete/:id",
       name: "delete-article",
-      component: Articles,
+      component: () => import("@/views/Articles.vue"),
     },
   ],
 });
@@ -69,7 +70,7 @@ const router = createRouter({
 // session, so verify with the backend once per page load before trusting it.
 let authChecked = false;
 
-router.beforeEach(async (to, from, next) => {
+router.beforeEach(async (to) => {
   const { isLoggedIn, checkAuth } = useAuth();
   if (!authChecked) {
     authChecked = true;
@@ -79,10 +80,8 @@ router.beforeEach(async (to, from, next) => {
   const authRequired = !publicPages.includes(to.name);
 
   if (authRequired && !isLoggedIn.value) {
-    return next("/login");
+    return "/login";
   }
-
-  next();
 });
 
 export default router;

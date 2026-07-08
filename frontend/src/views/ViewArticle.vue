@@ -1,7 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
-import api from "@/services/api";
+import { cachedGet } from "@/services/prefetchCache";
 import Nav from "@/components/Nav.vue";
 import { useApiError } from "@/composables/useApiError";
 
@@ -13,7 +13,7 @@ const userEmail = ref("");
 
 onMounted(async () => {
   try {
-    const response = await api.get(`/articles/view/${route.params.id}.json`);
+    const response = await cachedGet(`/articles/view/${route.params.id}.json`);
     fetchedArticle.value = response.data.article;
     fetchedArticle.value.created = formatDate(fetchedArticle.value.created);
     userEmail.value = response.data.article.user?.email ?? "";

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
-import api from "@/services/api";
+import { cachedGet } from "@/services/prefetchCache";
 import { useApiError } from "@/composables/useApiError";
 
 const { getErrorMessage } = useApiError();
@@ -10,7 +10,7 @@ const articles = ref([]);
 const fetchArticles = async () => {
   errorMessage.value = "";
   try {
-    const response = await api.get("/articles.json");
+    const response = await cachedGet("/articles.json");
     articles.value = response.data.articles;
   } catch (error) {
     errorMessage.value = getErrorMessage(error, "article list");

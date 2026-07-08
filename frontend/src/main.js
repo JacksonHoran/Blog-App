@@ -5,6 +5,7 @@ import App from './App.vue'
 import router from './router'
 import api from './services/api'
 import { useAuth } from './composables/useAuth'
+import prefetch from './directives/prefetch'
 
 // A 401 from any endpoint means the server-side session is gone (it can
 // expire while the UI still looks logged in). Clear local auth state and
@@ -28,4 +29,5 @@ api.interceptors.response.use(
 
 const app = createApp(App);
 app.use(router);
+app.directive('prefetch', prefetch);
 app.mount('#app');

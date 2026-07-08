@@ -146,16 +146,9 @@ class Application extends BaseApplication
     {
         $service = new AuthenticationService();
 
-        // Define where users should be redirected to when they are not authenticated
-        $service->setConfig([
-            'unauthenticatedRedirect' => [
-                'prefix' => false,
-                'plugin' => null,
-                'controller' => 'Users',
-                'action' => 'login',
-            ],
-            'queryParam' => 'redirect',
-        ]);
+        // This is a JSON API consumed by the Vue frontend: an unauthenticated
+        // request must get a 401 the client can react to, not a redirect to a
+        // login page (the redirect made failed saves look like successes).
 
         $fields = [
             PasswordIdentifier::CREDENTIAL_USERNAME => 'email',

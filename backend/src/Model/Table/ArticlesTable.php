@@ -94,16 +94,24 @@ class ArticlesTable extends Table
      */
     public function buildRules(RulesChecker $rules): RulesChecker
     {
-        $rules->add($rules->isUnique(['slug']), ['errorField' => 'slug']);
+        $rules->add(
+            $rules->isUnique(['slug'], 'An article with this title already exists.'),
+            ['errorField' => 'slug']
+        );
         $rules->add($rules->existsIn(['user_id'], 'Users'), ['errorField' => 'user_id']);
 
         return $rules;
     }
 
-    public function beforeSave(EventInterface $event, $entity, $options): void
+    /**
+     * The slug must exist before the rules checker runs, otherwise the
+     * isUnique rule never sees it and duplicates die on the database's
+     * unique index with a 500 instead of a validation error.
+     */
+    public function beforeRules(EventInterface $event, $entity, $options, $operation): void
     {
         if ($entity->isNew() && !$entity->slug) {
-            $sluggedTitle = Text::slug($entity->title);
+            $sluggedTitle = Text::slug((string)$entity->title);
             // trim slug to maximum length defined in schema
             $entity->slug = substr($sluggedTitle, 0, 191);
         }

@@ -4,6 +4,17 @@ export function useApiError() {
       return "Network error — please check your connection and try again.";
     }
     const status = error.response.status;
+    if (status === 422) {
+      // Surface the backend's field-level messages (e.g. "An article with
+      // this title already exists.") instead of a generic line.
+      const fieldErrors = error.response.data?.errors;
+      if (fieldErrors && typeof fieldErrors === "object") {
+        const details = Object.values(fieldErrors)
+          .flatMap((rules) => Object.values(rules))
+          .join(" ");
+        if (details) return details;
+      }
+    }
     const messages = {
       400: "Bad request — the server could not understand the request.",
       401: "You are not authenticated. Please log in and try again.",

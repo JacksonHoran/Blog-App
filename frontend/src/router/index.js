@@ -65,8 +65,16 @@ const router = createRouter({
   ],
 });
 
+// The was_logged_in flag in localStorage can outlive the server-side
+// session, so verify with the backend once per page load before trusting it.
+let authChecked = false;
+
 router.beforeEach(async (to, from, next) => {
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn, checkAuth } = useAuth();
+  if (!authChecked) {
+    authChecked = true;
+    await checkAuth();
+  }
   const publicPages = ["login", "add-user", "articles-list-public", "article-details-public"];
   const authRequired = !publicPages.includes(to.name);
 

@@ -13,15 +13,10 @@ const userEmail = ref("");
 
 onMounted(async () => {
   try {
-    const ArticleResponse = await api.get(
-      `/articles/view/${route.params.id}.json`,
-    );
-    const userResponse = await api.get(
-      `/users/view/${ArticleResponse.data.article.user_id}.json`,
-    );
-    fetchedArticle.value = ArticleResponse.data.article;
+    const response = await api.get(`/articles/view/${route.params.id}.json`);
+    fetchedArticle.value = response.data.article;
     fetchedArticle.value.created = formatDate(fetchedArticle.value.created);
-    userEmail.value = userResponse.data.user.email;
+    userEmail.value = response.data.article.user?.email ?? "";
   } catch (error) {
     errorMessage.value = getErrorMessage(error, "article");
     console.error(error);

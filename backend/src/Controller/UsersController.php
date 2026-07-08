@@ -5,14 +5,6 @@ namespace App\Controller;
 
 class UsersController extends AppController
 {
-    public function index()
-    {
-        $query = $this->Users->find();
-        $users = $this->paginate($query);
-
-        $this->set(compact('users'));
-    }
-
     public function view($id = null)
     {
         $this->request->allowMethod(['GET']);
@@ -83,7 +75,9 @@ class UsersController extends AppController
     public function beforeFilter(\Cake\Event\EventInterface $event): void
     {
         parent::beforeFilter($event);
-        $this->Authentication->allowUnauthenticated(['login', 'add', 'view']);
+        // view is intentionally NOT public: it would let anyone enumerate
+        // user ids and harvest email addresses
+        $this->Authentication->allowUnauthenticated(['login', 'add']);
     }
 
     public function login()

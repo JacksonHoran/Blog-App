@@ -7,11 +7,22 @@ use Cake\Http\Response;
 
 class ArticlesController extends AppController
 {
+    public function beforeFilter(\Cake\Event\EventInterface $event): void
+    {
+        parent::beforeFilter($event);
+        // status only reports whether a session exists, so logged-out
+        // clients must be able to call it
+        $this->Authentication->addUnauthenticatedActions(['status']);
+    }
+
     public function index()
     {
         $this->request->allowMethod(['GET']);
         $this->Authorization->skipAuthorization();
-        $articles = $this->paginate($this->Articles);
+        $articles = $this->paginate($this->Articles, [
+            'order' => ['Articles.created' => 'DESC'],
+            'limit' => 100,
+        ]);
         return $this->response
             ->withType('application/json')
             ->withStatus(200)
@@ -24,7 +35,9 @@ class ArticlesController extends AppController
     {
         $this->request->allowMethod(['GET']);
         $this->Authorization->skipAuthorization();
-        $article = $this->Articles->get($id);
+        $article = $this->Articles->get($id, contain: [
+            'Users' => ['fields' => ['id', 'email']],
+        ]);
         return $this->response
             ->withType('application/json')
             ->withStatus(200)

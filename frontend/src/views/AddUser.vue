@@ -68,7 +68,7 @@ const handleSubmit = async () => {
               v-model="password"
               required
               class="my-2 border w-full rounded-md px-3 py-1"
-              type="text" />
+              type="password" />
           </div>
         </fieldset>
         <div class="flex gap-4 pt-3">

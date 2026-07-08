@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import api from "@/services/api";
+import { cachedGet } from "@/services/prefetchCache";
 import Nav from "@/components/Nav.vue";
 import { useApiError } from "@/composables/useApiError";
 
@@ -14,7 +15,7 @@ const articleToDelete = ref(null);
 const fetchArticles = async () => {
   errorMessage.value = "";
   try {
-    const response = await api.get("/articles.json");
+    const response = await cachedGet("/articles.json");
     articles.value = response.data.articles;
   } catch (error) {
     errorMessage.value = getErrorMessage(error, "article list");
@@ -67,6 +68,7 @@ const formatDate = (dateString) => {
       <h2 class="text-3xl font-light mb-5">Articles</h2>
       <div class="mb-8">
         <router-link
+          v-prefetch="'add-article'"
           to="/articles/add"
           class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
           New Article
@@ -112,11 +114,13 @@ const formatDate = (dateString) => {
               <td
                 class="px-6 py-4 font-medium text-right whitespace-nowrap space-x-4">
                 <router-link
+                  v-prefetch
                   :to="`/articles/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">
                   View
                 </router-link>
                 <router-link
+                  v-prefetch
                   :to="`/articles/edit/${article.id}`"
                   class="text-blue-500 hover:text-blue-700 transition-colors">
                   Edit

@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import { useRouter, useRoute } from "vue-router";
 import api from "@/services/api";
+import { cachedGet } from "@/services/prefetchCache";
 import ArticleForm from "@/components/ArticleForm.vue";
 import Nav from "@/components/Nav.vue";
 import { useApiError } from "@/composables/useApiError";
@@ -14,7 +15,7 @@ const fetchedArticle = ref({ title: "", body: "" });
 
 onMounted(async () => {
   try {
-    const response = await api.get(`/articles/view/${route.params.id}.json`);
+    const response = await cachedGet(`/articles/view/${route.params.id}.json`);
     fetchedArticle.value = response.data.article;
   } catch (error) {
     serverError.value = getErrorMessage(error, "article");

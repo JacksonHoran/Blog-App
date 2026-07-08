@@ -37,10 +37,12 @@ const handleSubmit = async () => {
     <div class="text-3xl font-semibold cursor-pointer">My Blog</div>
     <div class="space-x-4 flex items-center">
       <router-link
+        v-prefetch
         to="/login"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Login</router-link>
       <router-link
+        v-prefetch
         to="/articles-public"
         class="px-2 text-xl cursor-pointer text-blue-500 hover:text-blue-700 transition-colors font-medium"
         >Articles</router-link>
@@ -74,6 +76,7 @@ const handleSubmit = async () => {
         <div class="flex gap-4 pt-3">
           <SubmitButton />
           <router-link
+            v-prefetch
             to="/login"
             class="text-blue-500 hover:text-blue-700 transition-colors font-medium">
             Cancel</router-link>

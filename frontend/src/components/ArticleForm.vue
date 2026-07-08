@@ -56,6 +56,7 @@ const handleSubmit = () => {
         <div class="flex pt-3 gap-4">
           <SubmitButton :text="buttonText" />
           <router-link
+            v-prefetch
             to="/articles"
             class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
             Cancel</router-link>

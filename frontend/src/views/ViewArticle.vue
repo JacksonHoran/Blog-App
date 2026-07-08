@@ -39,6 +39,7 @@ const formatDate = (dateString) => {
       <div class="p-5">
         <div class="mb-5">
           <router-link
+            v-prefetch
             to="/articles"
             class="text-blue-500 hover:text-blue-700 transition-colors font-medium flex items-center w-fit">
             &larr; All Articles
